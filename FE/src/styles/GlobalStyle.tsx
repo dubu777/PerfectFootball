@@ -38,7 +38,7 @@ const GlobalStyle = createGlobalStyle`
 		width: 100vw;
 		height: 100vh;
 		overflow: hidden;
-		font-family: 'NanumSquareNeo';
+		font-family: 'Pretendard';
 		font-weight: 700;
 		touch-action: none;
 	}

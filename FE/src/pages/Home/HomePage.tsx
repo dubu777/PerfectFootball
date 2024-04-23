@@ -1,3 +1,4 @@
+import { Container } from "@/components/Container/Container"
 import styled from "styled-components"
 
 
@@ -5,14 +6,16 @@ export default function HomePage() {
 
   return (
     <Container>
-      <h1>home</h1>
+      <Wrapper>
+        <h1>home</h1>
+      </Wrapper>
     </Container>
   )
 }
 
-const Container = styled.div`
+const Wrapper = styled.div`
   display: flex;
   width: 100dvw;
   height: 100dvh;
-  background-color: red;
+  background-color: white;
 `
