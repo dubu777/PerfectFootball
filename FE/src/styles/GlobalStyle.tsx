@@ -35,8 +35,8 @@ const GlobalStyle = createGlobalStyle`
 	}
 
 	body {
-		width: 100vw;
-		height: 100vh;
+		width: 100dvw;
+		height: 100dvh;
 		overflow: hidden;
 		font-family: 'Pretendard';
 		font-weight: 700;

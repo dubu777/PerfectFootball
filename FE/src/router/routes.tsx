@@ -3,6 +3,9 @@ import App from '@/App';
 import HomePage from '@/pages/Home/HomePage';
 import LandingPage from '@/pages/Landing/LandingPage';
 import MatchPage from '@/pages/Match/MatchPage';
+import SignInPage from '@/pages/SignIn/SignInPage';
+import SignUpPage from '@/pages/SignUp/SignUpPage';
+import SurveyPage from '@/pages/Survey/SurveyPage';
 
 
 const router = createBrowserRouter([
@@ -18,6 +21,18 @@ const router = createBrowserRouter([
       {
         path: 'landing',
         element: <LandingPage/>,
+      },
+      {
+        path: 'signin',
+        element: <SignInPage/>,
+      },
+      {
+        path: 'signup',
+        element: <SignUpPage/>,
+      },
+      {
+        path: 'survey',
+        element: <SurveyPage/>,
       },
       {
         path: 'match/:id',
