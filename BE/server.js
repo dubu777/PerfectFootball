@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors'); // CORS 미들웨어 import
 const { ObjectId } = require('mongodb')
 const bcrypt = require('bcrypt')
+// 세션을 DB에 저장하는 라이브러리
 const MongoStore = require('connect-mongo')
 require('dotenv').config()
 
@@ -22,18 +23,22 @@ const session = require('express-session')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 
-app.use(passport.initialize())
 app.use(session({
   resave : false,
   saveUninitialized : false,
   secret: process.env.SESSION_PW,
-  cookie : {maxAge : 1000 * 60 * 60},
+  cookie: {
+    httpOnly: true, //크로스 사이트 스크립팅 (XSS) 방지: 만약 웹 애플리케이션이 XSS 공격을 받을 경우, 공격자가 스크립트를 통해 세션 쿠키를 도용할 수 있습니다. httpOnly 옵션을 활성화하면, 이러한 쿠키들은 클라이언트 측 스크립트에 의해 읽혀질 수 없으므로, 공격자가 사용자의 세션을 도용하는 것을 어렵게 만듭니다.
+    secure: false, // HTTPS 환경에서만 적용. 개발 중에는 종종 false로 설정합니다. 배포시 true
+    maxAge: 1000 * 60 * 60 * 24 // 24시간
+  },
   store: MongoStore.create({
     mongoUrl : process.env.DB_URL,
     dbName: 'forum',
   })
 })) 
 
+app.use(passport.initialize())
 app.use(passport.session()) 
 
 let connectDB = require('./database')
@@ -50,16 +55,6 @@ connectDB.then((client)=>{
 // 에러가나면 에러 출력해줘라
 }).catch((err)=>{
   console.log(err)
-})
-
-
-app.get('/', (req, res) => {
-  res.send('반갑다')
-})
-
-app.get('/news', (req, res) => {
-  // db.collection('post').insertOne({title: '첫 백엔드 데이터 넣기 성공!'})
-  res.send('오늘 비옴')
 })
 
 
@@ -81,20 +76,6 @@ app.get('/news', (req, res) => {
   })
 
 
-  app.post('/user/info', async (req, res) => {
-    try {
-      if ( req.body.nickName == ''){
-        res.status(400).send('닉네임미입력')
-      } else {
-        console.log(req.body);
-        await db.collection('match').insertOne(req.body)
-        res.status(200).send('성공');
-      }
-    } catch(error) {
-      console.log(error);
-      res.status(500).send('서버 에러 발생')
-    }
-  })
 
 //URL 파라미터 문법(상세페이지)
 
@@ -148,26 +129,63 @@ passport.deserializeUser(async (user, done) => {
 
 // 현재 로그인된 유저정보 출력 요청 - req.user
 
-app.post('/login', async (요청, 응답, next) => {
+app.post('/user/signin', async (req, res, next) => {
 
   passport.authenticate('local', (error, user, info) => {
-      if (error) return 응답.status(500).json(error)
-      if (!user) return 응답.status(401).json(info.message)
-      요청.logIn(user, (err) => {
-        if (err) return next(err)
-        응답.redirect('/')
-      })
-  })(요청, 응답, next)
+      if (error) return res.status(500).json(error)
+      if (!user) return res.status(401).json(info.message)
+      if (error) {
+        return res.status(500).json({ error: '로그인 세션 저장 실패' });
+      }
+      req.logIn(user, (err) => {
+        if (err) {
+          return res.status(500).json({ error: '로그인 세션 저장 실패' });
+        }
+        // 로그인 성공, 사용자의 username을 응답으로 보냄
+        res.json({ message: '로그인 성공', username: user.username, nickname: user.nickname });
+      });
+  })(req, res, next)
 })
 
 // 회원가입 
-app.post('/register', async (요청, 응답) => {
-  let hash = await bcrypt.hash(요청.body.password, 10)
-  await db.collection('user').insertOne({
-    username : 요청.body.username,
-    password : hash
-  })
-  
+app.post('/user/signup', async (req, res) => {
+  console.log(res);
+  let hash = await bcrypt.hash(req.body.password, 10)
+  const result = await db.collection('user').insertOne({
+    username: req.body.username,
+    nickname: req.body.nickname,
+    password: hash
+  });
+
+  // 새로 생성된 사용자의 ID를 사용하여 사용자 정보 조회
+  const newUser = await db.collection('user').findOne({ _id: result.insertedId });
+  req.login(newUser, err => {
+    if (err) {
+      res.status(500).send("로그인 실패");
+    } else {
+      res.json({ message: "회원가입 및 로그인 성공", newUser });
+    }
+  });
 })
 
 
+app.post('/check-username', async (req, res) => {
+  const { username } = req.body;
+  console.log(username, '중복확인 아이디');
+  if (!username) {
+    return res.status(400).json({ message: '아이디를 입력해주세요.' });
+  }
+
+  try {
+    const user = await db.collection('user').findOne({ username: username });
+    console.log(user);
+    if (user) {
+      return res.json({ message: 'failed', });
+    } else {
+      return res.json({ message: 'success' });
+    }
+  } catch (err) {
+    console.error('DB 조회 중 오류 발생:', err);
+    return res.status(500).json({ message: '서버 오류 발생' });
+  }
+});
