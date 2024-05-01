@@ -3,6 +3,9 @@ import styled, { css } from "styled-components"
 interface IUserNameProps {
   $focused: boolean;  // 'focused' prop에 대한 타입 정의
 }
+interface SignInButtonProps {
+  $isActive: boolean;  // 사용자 정의 속성 'enabled'에 대한 타입 정의
+}
 
 export const Container = styled.div`
   display: flex;
@@ -19,13 +22,13 @@ export const SignInContainer = styled.div`
   width: 640px;
   max-width: 640px;
   min-width: 320px;
-  height: 500px;
+  height: 600px;
   padding: 24px;
   border-radius: 15px;
   box-shadow: 0px 10px 25px rgba(190, 190, 190, 0.35);
 `;
 
-export const SignInWrapper = styled.div`
+export const SignInWrapper = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -89,7 +92,7 @@ export const DuplicateCheckButton = styled.button`
     border-radius: 10px;
 `;
 
-export const SignInButton = styled.button`
+export const SignInButton = styled.button<SignInButtonProps>`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -105,4 +108,6 @@ export const SignInButton = styled.button`
     font-weight: 700;
     font-size: 16px;
     margin-top: 40px;
+    background-color: ${props => props.$isActive ? 'rgb(35, 122, 242)' : 'gray'};
+    color: ${props => props.$isActive ? 'rgb(255, 255, 255)' : 'rgba(255, 255, 255, 0.5)'};
 `;

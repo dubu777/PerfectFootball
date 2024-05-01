@@ -43,8 +43,6 @@ const SearchBarWarrper = styled.div`
   background-color: white;
 `;
 
-const SearchIcon = styled.svg``;
-
 const SearchInput = styled.input`
   color: #3e5463;
   font-size: 14px;

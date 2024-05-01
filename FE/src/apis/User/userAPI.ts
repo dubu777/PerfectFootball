@@ -1,6 +1,36 @@
 import { instance } from '@/apis/instance';
 
 
+const addUser = async (data: IUserInfo) => {
+  try {
+    await instance.post('/user/signup', data)
+  } catch(error) {
+    console.error('Failed to add user info:', error);
+    throw error;
+  }
+}
+
+const addSignIn = async (data: IUserSignInInfo) => {
+  try{
+    const respones = await instance.post('/user/signin', data)
+    console.log(respones, 'response');
+    return respones.data;
+  } catch (error) {
+    console.error('Failed to add signin info:', error);
+    throw error
+  }
+}
+
+const checkUsername = async (username: string) => {
+  try{
+    const respones = await instance.post('/check-username', {username})
+    console.log(respones);
+    return respones.data;
+  } catch (error) {
+    console.error('Failed to check username:', error);
+    throw error
+  }
+}
 
 const getUserInfo = async () => {
   try {
@@ -31,6 +61,6 @@ const getMatchData = async (id: string) => {
   }
 }
 
-export { getUserInfo, updateUserInfo, getMatchData };
+export { getUserInfo, updateUserInfo, getMatchData, addUser, addSignIn, checkUsername };
 
 

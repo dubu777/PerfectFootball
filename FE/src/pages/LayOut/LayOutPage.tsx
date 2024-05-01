@@ -1,17 +1,15 @@
 import Header from "@/components/Header/Header";
-import { useLogInStore } from "@/store/temp";
-
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
-import { SignInButton } from "../SignIn/SignInPage.styles";
+import { Outlet, useLocation } from "react-router-dom";
 
 const LayOutPage = () => {
-  // const [isLogin, setIsLogin] = useState(false);
-  const { isLogIn, handleLogIn } = useLogInStore();
+  const [isLogIn, _] = useState(!!localStorage.getItem("username"));
+  const location = useLocation();
+  const showHeader = isLogIn && location.pathname !== "/survey";
+
   return (
     <>
-    {isLogIn && <Header />} 
-    {/* <SignInButton onClick={handleLogIn}>로그인버튼</SignInButton> */}
+      {showHeader && <Header />}
       <Outlet />
     </>
   );

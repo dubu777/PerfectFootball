@@ -10,30 +10,28 @@ export const Container = styled.div`
   background-color: #FAFAFA;
 `;
 
-export const SignInContainer = styled.div`
+export const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 640px;
   max-width: 640px;
   min-width: 320px;
   height: 600px;
-  padding: 24px;
+  padding: 40px;
   border-radius: 15px;
   box-shadow: 0px 10px 25px rgba(190, 190, 190, 0.35);
 `;
 
-export const SignInWrapper = styled.div`
+export const ModalWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 20px 30px;
 `;
 
 export const TextWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  margin: 50px 0 50px 0;
   width: 100%;
 `;
 
@@ -51,7 +49,7 @@ export const SubText = styled.span`
 `;
 
 
-export const PositionIcon = styled.div`
+export const TempIcon = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 50%;

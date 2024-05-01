@@ -5,11 +5,22 @@ interface IUserInfoProps {
 }
 
 interface IUserInfo {
-  nickName: string;
-  playStyle: string;
+  username: string;
+  password: string;
+  nickname: string;
 }
 
 interface IMatchDataProps {
-  nickName: string;
+  username: string;
   playStyle: string;
+}
+
+interface IUserSignInInfo {
+  username: string;
+  password: string;
+}
+
+interface ISignInResponse {
+  username: string;
+  nickname: string;
 }

@@ -1,13 +1,17 @@
+import { useGetUserInfo } from "@/apis/User/Queries/useGetUserInfo"
 import { Container } from "@/components/Container/Container"
 import styled from "styled-components"
 
 
 export default function HomePage() {
 
+  const {data} = useGetUserInfo();
+console.log(data);
+
   return (
     <Container>
       <Wrapper>
-        <h1>home</h1>
+        <button>home</button>
       </Wrapper>
     </Container>
   )
