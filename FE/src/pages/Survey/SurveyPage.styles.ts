@@ -17,7 +17,7 @@ export const ModalContainer = styled.div`
   max-width: 640px;
   min-width: 320px;
   height: 600px;
-  padding: 40px;
+  padding: 40px 20px;
   border-radius: 15px;
   box-shadow: 0px 10px 25px rgba(190, 190, 190, 0.35);
 `;

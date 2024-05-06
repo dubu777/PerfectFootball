@@ -2,7 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom"
 import { addSignIn } from "../userAPI";
 
-
+// 일반 로그인 시에는 디폴트 값인 /home으로 리디렉션
+// 회원 가입 후 로그인 시에는 useAddUser에서 넘긴 /survey로 이동
 export const useAddSignIn = (redirectPath = '/home') => {
   const navigate = useNavigate();
   // 첫 번째 매개변수 (TData): 성공적인 mutation 요청 후 반환되는 데이터의 타입을 지정합니다. 이 경우 SignInResponse 타입은 API 요청이 성공했을 때 받을 응답의 구조를 정의합니다.

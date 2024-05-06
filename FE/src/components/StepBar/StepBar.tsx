@@ -1,12 +1,13 @@
+import { useSurveyStore } from "@/store/survey";
 import { Step, StepBarContainer } from "./StepBar.styles";
 
 
 interface IStepProps {
-  currentStep: number;
   totalSteps: number;
 }
 
-const StepBar = ({ currentStep, totalSteps }: IStepProps) => {
+const StepBar = ({ totalSteps }: IStepProps) => {
+  const currentStep = useSurveyStore(state => state.steps);
   return (
     <StepBarContainer>
       {/* Array.from에서 { length: totalSteps } 처럼 길이만 지정한 객체를 사용할 때, 

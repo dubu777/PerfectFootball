@@ -61,6 +61,17 @@ const getMatchData = async (id: string) => {
   }
 }
 
-export { getUserInfo, updateUserInfo, getMatchData, addUser, addSignIn, checkUsername };
+const getSurveyData = async () => {
+  try {
+    const { data } = await instance.get('/survey/question');
+    console.log(data);   
+    return data;
+  } catch (error) {
+    console.error('Failed to get user info:', error);
+    throw error;
+  }
+};
+
+export { getSurveyData, getUserInfo, updateUserInfo, getMatchData, addUser, addSignIn, checkUsername };
 
 
