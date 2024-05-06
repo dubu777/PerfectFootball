@@ -41,6 +41,29 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session()) 
 
+// s3 설정
+const { S3Client } = require('@aws-sdk/client-s3')
+const multer = require('multer')
+const multerS3 = require('multer-s3')
+const s3 = new S3Client({
+  region : 'ap-northeast-2',
+  credentials : {
+      accessKeyId : process.env.S3_KEY,
+      secretAccessKey : process.env.S3_SECRET
+  }
+})
+
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'jaehyeonperfect',
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString()) //업로드시 파일명 변경가능
+    }
+  })
+})
+
+
 let connectDB = require('./database')
 
 let db;
@@ -94,6 +117,18 @@ app.get('/match/:id', async (req, res) => {
 
 })
 
+app.get('/survey/question', async (req, res) => {
+  try{
+    let result = await db.collection('survey-question').find().toArray();
+    console.log(result, 'id로 가져오기');
+    res.json(result)
+    if( result === null) {
+      res.status(400).send('이상한 url 입력함')
+    }
+  }catch(error) {
+    res.status(400).send('이상한 url 넣었음')
+  }
+})
 
 passport.use(new LocalStrategy(async (입력한아이디, 입력한비번, cb) => {
   let result = await db.collection('user').findOne({ username : 입력한아이디})
